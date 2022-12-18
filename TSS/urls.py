@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from TSS.views import holaMund
+from TSS.views import holaMund, asignacion_pedidos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("holamundo/", holaMund)
+    path("holamundo/", holaMund),
+    path("funcion/", asignacion_pedidos)
 ]
