@@ -1,1 +1,44 @@
-alv me vale vrf perro
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Pagina inicio</title>
+</head>         
+<body>
+    <section class="formulario">
+        <h4>Formulario</h4>
+        <input class="input_form" type="text" name="" id="" placeholder="dato1">
+        <input class="input_form" type="text" name="" id="" placeholder="dato2">
+        <input class="input_form" type="text" name="" id="" placeholder="dato3">
+        <input class="input_form" type="text" name="" id="" placeholder="dato4">
+        <input class="input_form" type="text" name="" id="" placeholder="dato5">
+        <button>Enviar</button>
+    </section>
+    <section class="cuadroGrafica">
+        <canvas id="Grafica" width="400" height="300"></canvas>
+    </section>
+</body>
+<script>
+    let canvas = document.getElementById("Grafica").getContext("2d")
+
+    var chart = new Chart(canvas,{
+        type:"bar",
+        data:{
+            labels:["dato1","dato2","dato3","dato4"],
+            datasets:[
+                {
+                    label:"Grafica de dos dias de trabajo",
+                    backgroundColor:"rgb(0,0,0)",
+                    borderColor:"rgb(255,255,0)",
+                    data:[12,37,10,40]
+                }
+            ]
+        }
+    })
+</script>
+</html>
