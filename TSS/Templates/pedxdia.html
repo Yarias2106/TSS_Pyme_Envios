@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido por dia</title>
+</head>
+<style>
+    .cont{
+        display: block;
+        padding: 40px 40px;
+        min-height: 100vh;
+    }
+    .grafica{
+        width: 900px;
+        height: 500px;
+        margin: auto;
+        background-color: white;
+    }
+    .cuadro{
+        margin: auto;
+    }
+    table{
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        border: 3px solid black;
+        text-align: center;
+        margin-top: 80px;
+        font-size: 18px;
+    }
+    th, td{
+        border: 3px solid black; 
+        height: 50px;
+    }
+    th{
+        background-color: #3F4E4F;
+        color: white;
+    }
+    td{
+        background-color: white;
+    }
+    .titulo{
+        display: grid;
+        grid-template-columns: 10% 90%;
+        text-align: center;
+        margin: 20px 10px;
+    }
+    .ss{
+        background-color: #DCD7C9;
+    }
+</style>
+<body class="ss">
+    <div class="titulo">
+        <button onclick='location.href="/holamundo"'>Atras</button>
+        <h1>Datos pedido por dia</h1>
+    </div>
+    <div class="cont">
+        <div class="grafica">
+            <canvas id="Grafica"></canvas>
+        </div>
+        <div class="cuadro">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Sabado</th>
+                        <th>Domingo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{lunes}}</td>
+                        <td>{{martes}}</td>
+                        <td>{{miercoles}}</td>
+                        <td>{{jueves}}</td>
+                        <td>{{viernes}}</td>
+                        <td>{{sabado}}</td>
+                        <td>{{domingo}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    let canvas = document.getElementById("Grafica").getContext("2d")
+    const dias = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"] 
+    const datos = [{{lunes}},{{martes}},{{miercoles}},{{jueves}},{{viernes}},{{sabado}},{{domingo}}]
+
+    var pedxDia = new Chart(canvas,{
+        type:"radar",
+        data:{
+            labels: dias,
+            datasets:[
+                {
+                    label:"Grafica de dos dias de trabajo",
+                    backgroundColor:["#FF0000",
+                    "#0000FF",
+                    "#800080",
+                    "#00FFFF",
+                    "#FFFF00"
+                ],
+    
+                    borderColor:"#000000",
+                    data:datos
+                }
+            ]
+        }
+    })
+</script>
+</html>

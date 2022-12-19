@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from TSS.views import holaMund, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado, pedidoxDia
+from TSS.views import holaMund, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado, pedidoxDia, gananciaxEmp, pedidoxHora, rescatarDatos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +23,9 @@ urlpatterns = [
     path("funcion/", asignacion_pedidos),
     path("pagarxEmpleado/<int:idEmpleado>",pagarEmpleado),
     path("pedxEmp/", pedidoxEmpleado),
-    path("pedxDia/", pedidoxDia)
+    path("pedxDia/", pedidoxDia),
+    path("gananciaxEmp/", gananciaxEmp),
+    path("pedxHora/", pedidoxHora),
+    path("rescatar/", rescatarDatos),
+    path("listaDeEmpleados/", rescatarDatos)
 ]

@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
     <title>Pagina inicio</title>
 </head>         
 <body>
@@ -19,9 +19,6 @@
         <input class="input_form" type="text" name="" id="" placeholder="dato5">
         <button>Enviar</button>
     </section>
-    <div>
-        <p>aqui deberia ir el dato {{viernes}}</p>
-    </div>
     <section class="cuadroGrafica">
         <div class="cuadro" style="width: 800px; height:300px;">
             <canvas id="Grafica"></canvas>
@@ -32,7 +29,7 @@
     let canvas = document.getElementById("Grafica").getContext("2d")
     
     var chart = new Chart(canvas,{
-        type:"bar",
+        type:"line",
         data:{
             labels:["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"],
             datasets:[
@@ -44,9 +41,9 @@
                     "#00FFFF",
                     "#FFFF00"
                 ],
-    
+                    
                     borderColor:"#000000",
-                    data:[{{viernes}},{{sabado}},{{domingo}},{{sabado}},{{viernes}},{{sabado}},{{viernes}}]
+                    data:[{{lunes}},{{martes}},{{miercoles}},{{jueves}},{{viernes}},{{sabado}},{{domingo}}]
                 }
             ]
         }

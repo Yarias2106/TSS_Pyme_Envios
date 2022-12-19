@@ -1,0 +1,160 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido por hora</title>
+</head>
+<style>
+    .cont{
+        display: block;
+        padding: 40px 40px;
+        min-height: 100vh;
+    }
+    .grafica{
+        width: 900px;
+        height: 500px;
+        margin: auto;
+        background-color: white;
+    }
+    .cuadro{
+        margin: auto;
+        overflow-x: scroll;
+    }
+    table{
+        table-layout: fixed;
+        width: 100%;
+        margin-top: 80px;
+        border-collapse: collapse;
+        border: 3px solid black;
+        text-align: center;
+        font-size: 20px;
+       
+    }
+    th, td{
+        border: 3px solid black; 
+    }
+    th{
+        background-color: #3F4E4F;
+        color: white;
+    }
+    td{
+        background-color: white;
+    }
+    .titulo{
+        display: grid;
+        grid-template-columns: 10% 90%;
+        text-align: center;
+        margin: 20px 10px;
+    }
+    .ss{
+        background-color: #DCD7C9;
+    }
+</style>
+<body class="ss">
+    <div class="titulo">
+        <button onclick='location.href="/holamundo"'>Atras</button>
+        <h1>Datos pedidos por Hora</h1>
+    </div>
+    <div class="cont">
+        <div class="grafica">
+            <canvas id="Grafica"></canvas>
+        </div>
+        <div class="cuadro">
+            <table>
+                <thead>
+                    <tr>
+                        <th>00 AM</th>
+                        <th>01 AM</th>
+                        <th>02 AM</th>
+                        <th>03 AM</th>
+                        <th>04 AM</th>
+                        <th>05 AM</th>
+                        <th>06 AM</th>
+                        <th>07 AM</th>
+                        <th>08 AM</th>
+                        <th>09 AM</th>
+                        <th>10 AM</th>
+                        <th>11 AM</th>
+                        <th>12 PM</th>
+                        <th>13 PM</th>
+                        <th>14 PM</th>
+                        <th>15 PM</th>
+                        <th>16 PM</th>
+                        <th>17 PM</th>
+                        <th>18 PM</th>
+                        <th>19 PM</th>
+                        <th>20 PM</th>
+                        <th>21 PM</th>
+                        <th>22 PM</th>
+                        <th>23 PM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{cero}}</td>
+                        <td>{{uno}}</td>
+                        <td>{{dos}}</td>
+                        <td>{{tres}}</td>
+                        <td>{{cuatro}}</td>
+                        <td>{{cinco}}</td>
+                        <td>{{seis}}</td>
+                        <td>{{siete}}</td>
+                        <td>{{ocho}}</td>
+                        <td>{{nueve}}</td>
+                        <td>{{diez}}</td>
+                        <td>{{once}}</td>
+                        <td>{{doce}}</td>
+                        <td>{{trece}}</td>
+                        <td>{{catorce}}</td>
+                        <td>{{quince}}</td>
+                        <td>{{unoseis}}</td>
+                        <td>{{unosiete}}</td>
+                        <td>{{unoocho}}</td>
+                        <td>{{unonueve}}</td>
+                        <td>{{doscero}}</td>
+                        <td>{{dosuno}}</td>
+                        <td>{{dosdos}}</td>
+                        <td>{{dostres}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    let canvas = document.getElementById("Grafica").getContext("2d")
+    const horas = ["00","01","02","03","04","05","06","07","08","09","10","11","12",
+                    "13","14","15","16","17","18","19","20","21","22","23"] 
+    const datos = [{{cero}},{{uno}},{{dos}},{{tres}},{{cuatro}},{{cinco}},{{seis}},{{siete}},{{ocho}},{{nueve}},{{diez}},
+                    {{once}},{{doce}},{{trece}},{{catorce}},{{quince}},{{unoseis}},{{unosiete}},{{unoocho}},{{unonueve}},
+                    {{doscero}},{{dosuno}},{{dosdos}},{{dostres}}]
+
+
+    var pedxHora = new Chart(canvas,{
+        type:"line",
+        data:{
+            labels: horas,
+            datasets:[
+                {
+                    label:"Grafica de dos dias de trabajo",
+                    backgroundColor:["#FF0000",
+                    "#0000FF",
+                    "#800080",
+                    "#00FFFF",
+                    "#FFFF00"
+                ],
+    
+                    borderColor:"#000000",
+                    data: datos
+                }
+            ]
+        }
+    })
+</script>
+</html>

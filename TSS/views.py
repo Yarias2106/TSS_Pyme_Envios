@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from  gestionPedidos.models import Pedido, Empleado
 from django.db.models import Sum
 
 def holaMund(request):
 
-   return render(request, "holamundo.html")
+   return render(request, "paginainicio.html")
 
 
 
@@ -239,7 +239,7 @@ def pedidoxEmpleado(request):
     sumCantidad = totalCantidad["cantidad__sum"]
     contexto[empleado.nombre] = sumCantidad
   
-  return render(request, "nombrePlanilla.html", contexto)
+  return render(request, "pedidoxEmpleado.html", contexto)
 
 def pedidoxDia(request):
   
@@ -275,17 +275,22 @@ def pedidoxDia(request):
     'domingo' : sumDomingo
   }
 
-  return render(request, "plantilla.html", contexto)
+  return render(request, "pedxdia.html", contexto)
 
 def pedidoxHora(request):
   contexto = {}
-
-  for i in range(24):
-    sumHora = Pedido.objects.filter(hora = i).aggregate(Sum('cantidad'))
+  lista =["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"
+      ,"trece","catorce","quince","unoseis","unosiete","unoocho","unonueve","doscero","dosuno","dosdos","dostres"]
+  cont = 0
+  for i in lista:
+    sumHora = Pedido.objects.filter(hora = cont).aggregate(Sum('cantidad'))
     cantHora = sumHora["cantidad__sum"]
+    if cantHora == None: cantHora = 0
     contexto[i] = cantHora
+    cont = cont + 1
 
-  return render(request, "plantilla.html", contexto)
+  print(contexto)  
+  return render(request, "pedidoxHora.html", contexto)
 
 def gananciaxEmp(request):
   empleados = Empleado.objects.all()
@@ -295,7 +300,20 @@ def gananciaxEmp(request):
   for empleado in empleados:
     contexto[empleado.nombre] = empleado.pago 
 
-  return render(request, "lantilla.html", contexto)
+  return render(request, "gananciaxEmp.html", contexto)
+
+def rescatarDatos(request):
+  cant = request.POST.get('cantidad')
+  hora = request.POST.get('hora')
+  prioridad = request.POST.get('ciudades')
+  dia = request.POST.get('dia')
+
+  print(cant)
+  print(hora)
+  print(prioridad)
+  print(dia)
+
+  return redirect("/holamundo/")
 
 
 
