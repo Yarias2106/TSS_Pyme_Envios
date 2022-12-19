@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("holamundo/", holaMund),
     path("funcion/", asignacion_pedidos),
-    path("pagarxEmpleado/<int:idEmpleado>",pagarEmpleado),
+    path("pagarxEmpleado/",pagarEmpleado),
     path("pedxEmp/", pedidoxEmpleado)
 ]
