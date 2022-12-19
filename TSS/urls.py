@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from TSS.views import holaMund, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado
+from TSS.views import inicio, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado, pedidoxDia, pedidoxHora, gananciaxEmp, devolverEmpleados, devolverPedidosSinAsignar, devolverPedidosAsignados
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("holamundo/", holaMund),
+    path("inicio/", inicio),
     path("funcion/", asignacion_pedidos),
-    path("pagarxEmpleado/",pagarEmpleado),
-    path("pedxEmp/", pedidoxEmpleado)
+    path("pagarEmpleados/",pagarEmpleado),
+    path("pedxEmp/", pedidoxEmpleado),
+    path("pedxDia/", pedidoxDia),
+    path("pedxHora/", pedidoxHora),
+    path("ganxEmp/", gananciaxEmp),
+    path("empleados/", devolverEmpleados),
+    path("pedidosSinAsignar/", devolverPedidosSinAsignar),
+    path("pedidosAsignados/", devolverPedidosAsignados)
 ]

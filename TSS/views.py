@@ -2,14 +2,17 @@ from django.shortcuts import render
 from  gestionPedidos.models import Pedido, Empleado
 from django.db.models import Sum
 
-def holaMund(request):
-
-   return render(request, "holamundo.html")
 
 
+def inicio(request):
+  diaActual = "MARTES"
+  horadelDia = 9
+
+  asignacion_pedidos(request, horadelDia, diaActual)
+  #return render(request, "holamundo.html")
 
 
-def asignacion_pedidos(request):
+def asignacion_pedidos(request, horadelDia, diaActual):
   
   """ if request.method=="POST":
     
@@ -18,10 +21,11 @@ def asignacion_pedidos(request):
     Dia = request.POST.get('dia', '')
     Prioridad = request.POST.get('prioridad', '') """
   
-  Cantidad= 10
-  Hora = 10
+  #Darle un tab------------------
+  Cantidad= 59
+  Hora = 9
   Dia = "MARTES"
-  Prioridad = 1
+  Prioridad = 2
 
   #Divide los pedidos
   if Cantidad < 30:
@@ -29,30 +33,28 @@ def asignacion_pedidos(request):
       pedido.save()
   else:
       dividirPedido(Prioridad, Cantidad, Hora, Dia)
-  
+  #Tab hasta aqui----------------------
 
   #Segun el dia y prioridad se asigna a los empleados
-  if Dia == "VIERNES":
-    if (Hora >= 18 and Hora <= 21):
+  if diaActual == "VIERNES":
+    if (horadelDia >= 18 and horadelDia <= 21):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      print(lista)
-      asignarEmpleadoViernes(lista, Hora, Dia)
+      asignarEmpleadoViernes(lista, horadelDia, diaActual)
     
-  if Dia == "SABADO" and (Prioridad == 1 or Prioridad == 2):
-    if (Hora >= 8  and Hora <= 12):
+  if diaActual == "SABADO":
+    if (horadelDia >= 8  and horadelDia <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      print(lista)
-      asignarEmpleadoFinSemana(lista, Hora, 3)
+      asignarEmpleadoFinSemana(lista, horadelDia, diaActual, 3)
     
-  if Dia == "DOMINGO" and Prioridad == 1:
-    if (Hora >= 8 and Hora <= 12):
+  if diaActual == "DOMINGO":
+    if (horadelDia >= 8 and horadelDia <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad = 1).order_by('prioridad')
-      asignarEmpleadoFinSemana(lista, Hora, Dia, 2)
+      asignarEmpleadoFinSemana(lista, horadelDia, diaActual, 2)
 
-  if Dia == "LUNES" or Dia == "MARTES" or Dia == "MIERCOLES" or Dia == "JUEVES" or Dia == "VIERNES":
-    if (Hora >= 8 and Hora < 18 and Hora != 13):
+  if diaActual == "LUNES" or diaActual == "MARTES" or diaActual == "MIERCOLES" or diaActual == "JUEVES" or diaActual == "VIERNES":
+    if (horadelDia >= 8 and horadelDia < 18 and horadelDia != 13):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True).order_by('prioridad')
-      asignarEmpleado(lista, Hora, Dia)
+      asignarEmpleado(lista, horadelDia, diaActual)
 
 
 def dividirPedido(prioridad, cantidad, hora, dia):
@@ -77,6 +79,8 @@ def asignarEmpleado(lista, Hora, Dia):
   
   #Numero de empleados, segun la hora
   cantEmp = 8
+  if Dia == "LUNES" and Hora > 13 and Hora < 17: cantEmp = 10
+  
   if Hora == 17: cantEmp = 15
   
   #Libera al empleado de los pedidos que esta realizando
@@ -100,15 +104,7 @@ def asignarEmpleado(lista, Hora, Dia):
         totalCantPedidoTrabaja = cantPedido + pedido.cantidad
 
         if(empleado.trabajando < 30 and sumaAux <= 30 and totalCantPedidoTrabaja <= 30):
-          """ cantPedidosAsignados = Pedido.objects.filter(empleado_asignado=empleado.id, hora = pedido.hora, dia=pedido.dia).aggregate(Sum('cantidad'))
-
-          aux2 = cantPedidosAsignados["cantidad__sum"]
-
-          if aux2 == None:  aux2 = 0
-
-          aux = aux2 + pedido.cantidad """
           
-          #if (aux2 <= 30 and aux <=30):
           pedidoGuardar = Pedido.objects.get(id = pedido.id)
           pedidoGuardar.empleado_asignado_id = empleado.id
           pedidoGuardar.horaTrabajada = Hora
@@ -207,7 +203,7 @@ def pagarEmpleado(request):
 
   for empleado in empleados:
     for hoy in semana:
-      for i in range(24):
+      for i in range(8, 22):
         pedido = Pedido.objects.filter(empleado_asignado = empleado.id).filter(diaTrabajado = hoy).filter(horaTrabajada = i )
         
         if pedido.count() >= 1:
@@ -288,5 +284,13 @@ def devolverEmpleados(request):
 
 def devolverPedidos(request):
   pedidos = Pedido.objects.all()
+  return render(request, "plantilla.html", pedidos)
+
+def devolverPedidosSinAsignar(request):
+  pedidos = Pedido.objects.filter(empleado_asignado__isnull=True)
+  return render(request, "plantilla.html", pedidos)
+
+def devolverPedidosAsignados(request):
+  pedidos = Pedido.objects.filter(empleado_asignado__isnull=False)
   return render(request, "plantilla.html", pedidos)
 
