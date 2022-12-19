@@ -222,7 +222,8 @@ def asignarEmpleadoViernes(lista, Hora, Dia):
 
 def pagarEmpleado(idEmpleado):
   
-  sumCantPagado = Pedido.objects.filter(empleado_asignado = idEmpleado).aaggregate(Sum('pagoxHora'))
+
+  sumCantPagado = Pedido.objects.filter(empleado_asignado = idEmpleado, ).aaggregate(Sum('pagoxHora'))
   cantPagado = sumCantPagado["cantidad__sum"]
 
   empleado = Empleado.objects.get(idEmpleado)
@@ -244,24 +245,31 @@ def pedidoxDia(request):
   
   lunes = Pedido.objects.filter(dia = "LUNES").aggregate(Sum('cantidad'))
   sumLunes = lunes["cantidad__sum"]
+  if sumLunes == None: sumLunes = 0
   martes = Pedido.objects.filter(dia = "MARTES").aggregate(Sum('cantidad'))
   sumMartes = martes["cantidad__sum"]
+  if sumMartes == None: sumMartes = 0
   miercoles = Pedido.objects.filter(dia = "MIERCOLES").aggregate(Sum('cantidad'))
   sumMiercoles = miercoles["cantidad__sum"]
+  if sumMiercoles == None: sumMiercoles = 0
   jueves = Pedido.objects.filter(dia = "JUEVES").aggregate(Sum('cantidad'))
-  sumJuves = jueves["cantidad__sum"]
+  sumJueves = jueves["cantidad__sum"]
+  if sumJueves == None: sumJueves = 0
   viernes = Pedido.objects.filter(dia = "VIERNES").aggregate(Sum('cantidad'))
   sumViernes = viernes["cantidad__sum"]
+  if sumViernes == None: sumViernes = 0
   sabado = Pedido.objects.filter(dia = "SABADO").aggregate(Sum('cantidad'))
   sumSabado = sabado["cantidad__sum"]
+  if sumSabado == None: sumSabado = 0
   domingo = Pedido.objects.filter(dia = "DOMINGO").aggregate(Sum('cantidad'))
   sumDomingo = domingo["cantidad__sum"]
+  if sumDomingo == None: sumDomingo = 0
   
   contexto = {
     'lunes' : sumLunes,
     'martes' : sumMartes,
     'miercoles' : sumMiercoles,
-    'jueves' : sumJuves,
+    'jueves' : sumJueves,
     'viernes' : sumViernes,
     'sabado' : sumSabado,
     'domingo' : sumDomingo
