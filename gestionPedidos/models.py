@@ -12,6 +12,9 @@ class Pedido(models.Model):
    prioridad = models.IntegerField(max_length = 1, default=0)
    hora = models.IntegerField(max_length = 2)
    dia = models.CharField(max_length = 30)
+   pagoxHora = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+   horaTrabajada = models.IntegerField(max_length = 2, default=0)
+   diaTrabajado = models.CharField(max_length = 30, default="-")
    empleado_asignado = models.ForeignKey(Empleado,models.SET_NULL,blank=True, null=True)
 
 

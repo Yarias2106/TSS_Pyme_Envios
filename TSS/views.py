@@ -17,9 +17,9 @@ def asignacion_pedidos(request):
   cant_pedido_x_trabajador = 30
   cantidad_sobrante_dia_x = 0
   
-  Cantidad= 200
-  Hora = 15
-  Dia = "LUNES"
+  Cantidad= 50
+  Hora = 12
+  Dia = "DOMINGO"
   Prioridad = 1
 
     
@@ -30,31 +30,34 @@ def asignacion_pedidos(request):
   #empleado_asignado = models.ForeignKey(Empleado,models.SET_NULL,blank=True, null=True)
   
   
-  """ if Cantidad < 30:
-     pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia )
-     pedido.save()
+  if Cantidad < 30:
+      pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia )
+      pedido.save()
   else:
-    dividirPedido(Prioridad, Cantidad, Hora, Dia) """
+      dividirPedido(Prioridad, Cantidad, Hora, Dia)
   
 
   if Dia == "VIERNES":
-    if (Hora >= 7 and Hora <= 9):
+    if (Hora >= 18 and Hora <= 21):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      asignarEmpleadoViernes(lista)
+      print(lista)
+      asignarEmpleadoViernes(lista, Hora, Dia)
     
   if Dia == "SABADO" and (Prioridad == 1 or Prioridad == 2):
     if (Hora >= 8  and Hora <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      asignarEmpleadoFinSemana(lista, Hora)
+      print(lista)
+      asignarEmpleadoFinSemana(lista, Hora, 3)
     
   if Dia == "DOMINGO" and Prioridad == 1:
-    if (Hora >= 8 and Hora != 12):
+    if (Hora >= 8 and Hora <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad = 1).order_by('prioridad')
-      asignarEmpleadoFinSemana(lista, Hora)
-  else:
+      asignarEmpleadoFinSemana(lista, Hora, Dia, 2)
+
+  if Dia == "LUNES" or Dia == "MARTES" or Dia == "MIERCOLES" or Dia == "JUEVES" or Dia == "VIERNES":
     if (Hora >= 8 and Hora < 18 and Hora != 13):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True).order_by('prioridad')
-      asignarEmpleado(lista, Hora)
+      asignarEmpleado(lista, Hora, Dia)
 
   """
   for i in hora:
@@ -84,10 +87,10 @@ def asignacion_pedidos(request):
   print(diccionario_asignacion)
     """
   
-def cantidadAsignado(empleado):
+""" def cantidadAsignado(empleado):
   cantAsignado = 3
   #Consulta para saber asignaciones#
-  return cantAsignado
+  return cantAsignado """
 
 def dividirPedido(prioridad, cantidad, hora, dia):
   cantidad2 = cantidad
@@ -107,15 +110,15 @@ def dividirPedido(prioridad, cantidad, hora, dia):
   pedido.save()
 
 
-def pedidos_acumulados():
+""" def pedidos_acumulados():
   #pedidos = Pedido.objects.filter(hora__lte=7,hora__gte=18)
   pedidos = Pedido.objects.filter(empleado_asignado__isnull=True).order_by('prioridad')
   #pedidos = Pedido.objects.filter(hora = 1, hora=5)
   #pedidos = Pedido.objects.get()
   print("Imprimir pedidos")
-  print (pedidos)
+  print (pedidos) """
 
-def asignarEmpleado(lista, Hora):
+def asignarEmpleado(lista, Hora, Dia):
   
   cantEmp = 8
   if Hora == 17: cantEmp = 15
@@ -144,17 +147,21 @@ def asignarEmpleado(lista, Hora):
           if (aux2 <= 30 and aux <=30):
             pedidoGuardar = Pedido.objects.get(id = pedido.id)
             pedidoGuardar.empleado_asignado_id = empleado.id
+            pedidoGuardar.horaTrabajada = Hora
+            pedidoGuardar.diaTrabajado = Dia
+            pedidoGuardar.pagoxHora = 12.5
             pedidoGuardar.save()
 
             empleadoGuardar = Empleado.objects.get(id = empleado.id)
             empleadoGuardar.trabajando = empleadoGuardar.trabajando + pedido.cantidad
             empleadoGuardar.save()
             break
-
-def asignarEmpleadoFinSemana(lista, Hora):
   
-  cantEmp = 4
-  if Hora == 12: cantEmp = 5
+
+def asignarEmpleadoFinSemana(lista, Hora,Dia, emp):
+  
+  cantEmp = emp
+  if Hora == 12: cantEmp = emp+1
   
   empleadosLista = Empleado.objects.all()
   empleados = empleadosLista[:cantEmp]
@@ -169,29 +176,23 @@ def asignarEmpleadoFinSemana(lista, Hora):
     for empleado in empleados:
         sumaAux = empleado.trabajando + pedido.cantidad
         if(empleado.trabajando < 30 and sumaAux <= 30):
-          cantPedidosAsignados = Pedido.objects.filter(empleado_asignado=empleado.id, hora = pedido.hora, dia=pedido.dia).aggregate(Sum('cantidad'))
 
-          aux2 = cantPedidosAsignados["cantidad__sum"]
+          pedidoGuardar = Pedido.objects.get(id = pedido.id)
+          pedidoGuardar.empleado_asignado_id = empleado.id
+          pedidoGuardar.horaTrabajada = Hora
+          pedidoGuardar.diaTrabajado = Dia
+          pedidoGuardar.pagoxHora = 50
+          pedidoGuardar.save()
 
-          if aux2 == None:  aux2 = 0
+          empleadoGuardar = Empleado.objects.get(id = empleado.id)
+          empleadoGuardar.trabajando = empleadoGuardar.trabajando + pedido.cantidad
+          empleadoGuardar.save()
+          break
 
-          aux = aux2 + pedido.cantidad
-
-          if (aux2 <= 30 and aux <=30):
-            pedidoGuardar = Pedido.objects.get(id = pedido.id)
-            pedidoGuardar.empleado_asignado_id = empleado.id
-            pedidoGuardar.save()
-
-            empleadoGuardar = Empleado.objects.get(id = empleado.id)
-            empleadoGuardar.trabajando = empleadoGuardar.trabajando + pedido.cantidad
-            empleadoGuardar.save()
-            break
-
-def asignarEmpleadoViernes(lista):
-  cantEmp = 4
+def asignarEmpleadoViernes(lista, Hora, Dia):
   
   empleadosLista = Empleado.objects.all()
-  empleados = empleadosLista[:cantEmp]
+  empleados = empleadosLista[:4]
   for empleado in empleados:
     empleadoGuardar = Empleado.objects.get(id = empleado.id)
     empleadoGuardar.trabajando = 0
@@ -199,26 +200,95 @@ def asignarEmpleadoViernes(lista):
 
   for pedido in lista:
     empleadosLista = Empleado.objects.all()
-    empleados = empleadosLista[:cantEmp]
+    empleados = empleadosLista[:4]
+    print(empleados)
     for empleado in empleados:
+        print(empleado.trabajando)
         sumaAux = empleado.trabajando + pedido.cantidad
         if(empleado.trabajando < 30 and sumaAux <= 30):
-          cantPedidosAsignados = Pedido.objects.filter(empleado_asignado=empleado.id, hora = pedido.hora, dia=pedido.dia).aggregate(Sum('cantidad'))
 
-          aux2 = cantPedidosAsignados["cantidad__sum"]
+          pedidoGuardar = Pedido.objects.get(id = pedido.id)
+          pedidoGuardar.empleado_asignado_id = empleado.id
+          pedidoGuardar.horaTrabajada = Hora
+          pedidoGuardar.diaTrabajado = Dia
+          pedidoGuardar.pagoxHora = 37.5
+          pedidoGuardar.save()
 
-          if aux2 == None:  aux2 = 0
+          empleadoGuardar = Empleado.objects.get(id = empleado.id)
+          empleadoGuardar.trabajando = empleadoGuardar.trabajando + pedido.cantidad
+          empleadoGuardar.save()
+          break
 
-          aux = aux2 + pedido.cantidad
 
-          if (aux2 <= 30 and aux <=30):
-            pedidoGuardar = Pedido.objects.get(id = pedido.id)
-            pedidoGuardar.empleado_asignado_id = empleado.id
-            pedidoGuardar.save()
-
-            empleadoGuardar = Empleado.objects.get(id = empleado.id)
-            empleadoGuardar.trabajando = empleadoGuardar.trabajando + pedido.cantidad
-            empleadoGuardar.save()
-            break
+def pagarEmpleado(idEmpleado):
   
+  sumCantPagado = Pedido.objects.filter(empleado_asignado = idEmpleado).aaggregate(Sum('pagoxHora'))
+  cantPagado = sumCantPagado["cantidad__sum"]
+
+  empleado = Empleado.objects.get(idEmpleado)
+  empleado.pago = cantPagado
+  empleado.save()
+
+def pedidoxEmpleado(request):
+  empleados = Empleado.objects.all()
+  contexto = {}
+
+  for empleado in empleados:
+    totalCantidad = Pedido.objects.filter(empleado_asignado = empleado.id).aggregate(Sum('cantidad'))
+    sumCantidad = totalCantidad["cantidad__sum"]
+    contexto[empleado.nombre] = sumCantidad
+  
+  return render(request, "nombrePlanilla.html", contexto)
+
+def pedidoxDia(request):
+  
+  lunes = Pedido.objects.filter(dia = "LUNES").aggregate(Sum('cantidad'))
+  sumLunes = lunes["cantidad__sum"]
+  martes = Pedido.objects.filter(dia = "MARTES").aggregate(Sum('cantidad'))
+  sumMartes = martes["cantidad__sum"]
+  miercoles = Pedido.objects.filter(dia = "MIERCOLES").aggregate(Sum('cantidad'))
+  sumMiercoles = miercoles["cantidad__sum"]
+  jueves = Pedido.objects.filter(dia = "JUEVES").aggregate(Sum('cantidad'))
+  sumJuves = jueves["cantidad__sum"]
+  viernes = Pedido.objects.filter(dia = "VIERNES").aggregate(Sum('cantidad'))
+  sumViernes = viernes["cantidad__sum"]
+  sabado = Pedido.objects.filter(dia = "SABADO").aggregate(Sum('cantidad'))
+  sumSabado = sabado["cantidad__sum"]
+  domingo = Pedido.objects.filter(dia = "DOMINGO").aggregate(Sum('cantidad'))
+  sumDomingo = domingo["cantidad__sum"]
+  
+  contexto = {
+    'lunes' : sumLunes,
+    'martes' : sumMartes,
+    'miercoles' : sumMiercoles,
+    'jueves' : sumJuves,
+    'viernes' : sumViernes,
+    'sabado' : sumSabado,
+    'domingo' : sumDomingo
+  }
+
+  return render(request, "plantilla.html", contexto)
+
+def pedidoxHora(request):
+  contexto = {}
+
+  for i in range(24):
+    sumHora = Pedido.objects.filter(hora = i).aggregate(Sum('cantidad'))
+    cantHora = sumHora["cantidad__sum"]
+    contexto[i] = cantHora
+
+  return render(request, "plantilla.html", contexto)
+
+def gananciaxEmp(request):
+  empleados = Empleado.objects.all()
+
+  contexto = {}
+  
+  for empleado in empleados:
+    contexto[empleado.nombre] = empleado.pago 
+
+  return render(request, "lantilla.html", contexto)
+
+
+
 
