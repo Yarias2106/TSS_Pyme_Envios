@@ -91,9 +91,12 @@
 </body>
 <script>
     let canvas = document.getElementById("Grafica").getContext("2d")
-    let nombre = ("{{empleados}}")
-    console.log(nombre) 
-
+    var lista = []
+    {% for empleado in empleados %}
+        var {{empleado.nombre}} = {{empleado.pago}}
+        lista.push({{empleado.nombre}})
+    {% endfor %}
+    
     var gananciaxEmp = new Chart(canvas,{
         type:"pie",
         data:{
@@ -111,7 +114,7 @@
                 ],
     
                     borderColor:"#000000",
-                    data:[20,30,56,12,34,41,33]
+                    data: lista
                 }
             ]
         }
