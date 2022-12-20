@@ -18,11 +18,12 @@
 }
 .btn_graf{
     text-align: center;
-    padding-top: 25%;
+    padding-top: 15%;
+    padding-bottom: 10%;
 }
 .btn_graf button{
-    width: 400px;
-    height: 90px;
+    width: 380px;
+    height: 80px;
     margin-top: 25px;
     border-radius: 15px;
     font-size: 20px;

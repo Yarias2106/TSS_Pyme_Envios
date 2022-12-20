@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from  gestionPedidos.models import Pedido, Empleado
 from django.db.models import Sum
 
-def holaMund(request):
+def home(request):
 
-   return render(request, "paginainicio.html")
+  return render(request, "paginainicio.html")
 
 
 def inicio(request):
@@ -213,6 +213,8 @@ def pagarEmpleado(request):
           empleado = Empleado.objects.get(id = empleado.id)
           empleado.pago = empleado.pago + pedido.first().pagoxHora
           empleado.save()
+  
+  return redirect("/empleados/")
 
 def pedidoxEmpleado(request):
   empleados = Empleado.objects.all()
@@ -272,17 +274,32 @@ def pedidoxHora(request):
     if cantHora == None: cantHora = 0
     contexto[i] = cantHora
     cont = cont + 1
+    
+  return render(request, "pedidoxHora.html", contexto)
 
-  print(contexto)  
+def pedidoxHoraxDia(request, Dia):
+  contexto = {}
+  lista =["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"
+      ,"trece","catorce","quince","unoseis","unosiete","unoocho","unonueve","doscero","dosuno","dosdos","dostres"]
+  cont = 0
+  for i in lista:
+    sumHora = Pedido.objects.filter(hora = cont, dia = Dia).aggregate(Sum('cantidad'))
+    cantHora = sumHora["cantidad__sum"]
+    if cantHora == None: cantHora = 0
+    contexto[i] = cantHora
+    cont = cont + 1
+  
   return render(request, "pedidoxHora.html", contexto)
 
 def gananciaxEmp(request):
   empleados = Empleado.objects.all()
 
-  contexto = {}
+  contexto = {
+    'empleados' : empleados
+  }
   
-  for empleado in empleados:
-    contexto[empleado.nombre] = empleado.pago 
+  """ for empleado in empleados:
+    contexto[empleado.nombre] = empleado.pago  """
 
   return render(request, "gananciaxEmp.html", contexto)
 
@@ -292,26 +309,33 @@ def rescatarDatos(request):
   prioridad = request.POST.get('ciudades')
   dia = request.POST.get('dia')
 
-  print(cant)
-  print(hora)
-  print(prioridad)
-  print(dia)
-
-  return redirect("/holamundo/")
+  return redirect("/home/")
 
 def devolverEmpleados(request):
   empleados = Empleado.objects.all()
-  return render(request, "plantilla.html", empleados)
+  context = {
+    'empleados' : empleados
+  }
+  return render(request, "lista.html", context)
 
 def devolverPedidos(request):
   pedidos = Pedido.objects.all()
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "plantilla.html", context)
 
 def devolverPedidosSinAsignar(request):
   pedidos = Pedido.objects.filter(empleado_asignado__isnull=True)
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "pedidosxasignar.html", context)
 
 def devolverPedidosAsignados(request):
   pedidos = Pedido.objects.filter(empleado_asignado__isnull=False)
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "pedidosasignados.html", context)
 

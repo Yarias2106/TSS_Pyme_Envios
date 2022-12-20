@@ -17,13 +17,14 @@
         min-height: 100vh;
     }
     .grafica{
-        width: 900px;
+        width: 500px;
         height: 500px;
         margin: auto;
         background-color: white;
     }
     .cuadro{
         margin: auto;
+        width: 70%;
     }
     table{
         table-layout: fixed;
@@ -51,12 +52,17 @@
         margin: 20px 10px;
     }
     .ss{
-        background-color: #DCD7C9;
+        background-image: url(../../static/Imagenes/1jpg.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        position: relative;
+        min-height: 100vh; 
+        background-size: cover;     
     }
 </style>
 <body class="ss">
     <div class="titulo">
-        <button onclick='location.href="/holamundo"'>Atras</button>
+        <button onclick='location.href="/home"'>Atras</button>
         <h1>Datos ganancia por Empleado</h1>
     </div>
     <div class="cont">
@@ -67,34 +73,17 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Lunes</th>
-                        <th>Martes</th>
-                        <th>Miercoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sabado</th>
-                        <th>Domingo</th>
+                        <th>Nombre</th>
+                        <th>Sueldo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                    </tr>
+                    {% for empleado in empleados %}
+                        <tr>
+                            <td>{{empleado.nombre}}</td>
+                            <td>{{empleado.pago}}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -108,6 +97,8 @@
     var gananciaxEmp = new Chart(canvas,{
         type:"pie",
         data:{
+
+            
             labels:["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"],
             datasets:[
                 {
