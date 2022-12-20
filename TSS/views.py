@@ -5,73 +5,76 @@ from django.db.models import Sum
 
 
 def inicio(request):
-  diaActual = "MARTES"
+  """ diaActual = "MARTES"
   horadelDia = 9
 
-  asignacion_pedidos(request, horadelDia, diaActual)
+  asignacion_pedidos(request, horadelDia, diaActual) """
+  asignacion_pedidos(request)
   #return render(request, "holamundo.html")
 
 
-def asignacion_pedidos(request, horadelDia, diaActual):
+def asignacion_pedidos(request):
   
   """ if request.method=="POST":
     
     Cantidad= request.POST.get('cantidad', '')
     Hora = request.POST.get('hora', '')
     Dia = request.POST.get('dia', '')
-    Prioridad = request.POST.get('prioridad', '') """
+    Prioridad = request.POST.get('prioridad', '') 
+    Ciudad = request.POST.get('ciudad', '')"""
   
   #Darle un tab------------------
-  Cantidad= 59
-  Hora = 9
+  Cantidad= 10
+  Hora = 8
   Dia = "MARTES"
-  Prioridad = 2
+  Prioridad = 3
+  Ciudad = "Cochabamba"
 
   #Divide los pedidos
   if Cantidad < 30:
-      pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia )
+      pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia, ciudad = Ciudad)
       pedido.save()
   else:
-      dividirPedido(Prioridad, Cantidad, Hora, Dia)
+      dividirPedido(Prioridad, Cantidad, Hora, Dia, Ciudad)
   #Tab hasta aqui----------------------
 
   #Segun el dia y prioridad se asigna a los empleados
-  if diaActual == "VIERNES":
-    if (horadelDia >= 18 and horadelDia <= 21):
+  if Dia == "VIERNES":
+    if (Hora >= 18 and Hora <= 21):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      asignarEmpleadoViernes(lista, horadelDia, diaActual)
+      asignarEmpleadoViernes(lista, Hora, Dia)
     
-  if diaActual == "SABADO":
-    if (horadelDia >= 8  and horadelDia <= 12):
+  if Dia == "SABADO":
+    if (Hora >= 8  and Hora <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad__lte = 2).order_by('prioridad')
-      asignarEmpleadoFinSemana(lista, horadelDia, diaActual, 3)
+      asignarEmpleadoFinSemana(lista, Hora, Dia, 3)
     
-  if diaActual == "DOMINGO":
-    if (horadelDia >= 8 and horadelDia <= 12):
+  if Dia == "DOMINGO":
+    if (Hora >= 8 and Hora <= 12):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True, prioridad = 1).order_by('prioridad')
-      asignarEmpleadoFinSemana(lista, horadelDia, diaActual, 2)
+      asignarEmpleadoFinSemana(lista, Hora, Dia, 2)
 
-  if diaActual == "LUNES" or diaActual == "MARTES" or diaActual == "MIERCOLES" or diaActual == "JUEVES" or diaActual == "VIERNES":
-    if (horadelDia >= 8 and horadelDia < 18 and horadelDia != 13):
+  if Dia == "LUNES" or Dia == "MARTES" or Dia == "MIERCOLES" or Dia == "JUEVES" or Dia == "VIERNES":
+    if (Hora >= 8 and Hora < 18 and Hora != 13):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True).order_by('prioridad')
-      asignarEmpleado(lista, horadelDia, diaActual)
+      asignarEmpleado(lista, Hora, Dia)
 
 
-def dividirPedido(prioridad, cantidad, hora, dia):
+def dividirPedido(prioridad, cantidad, hora, dia, ciudad):
   cantidad2 = cantidad
   bandera = True
   while(bandera):
      cantidad_aux = cantidad2 - 30
      if cantidad_aux <= 30:
-       pedido = Pedido(cantidad=cantidad_aux, prioridad = prioridad, hora = hora, dia = dia )
+       pedido = Pedido(cantidad=cantidad_aux, prioridad = prioridad, hora = hora, dia = dia, ciudad = ciudad )
        pedido.save()
        bandera = False
      else:
-       pedido = Pedido(cantidad=30, prioridad = prioridad, hora = hora, dia = dia )
+       pedido = Pedido(cantidad=30, prioridad = prioridad, hora = hora, dia = dia, ciudad = ciudad )
        pedido.save()
        cantidad2 = cantidad_aux
 
-  pedido = Pedido(cantidad=30, prioridad = prioridad, hora = hora, dia = dia )
+  pedido = Pedido(cantidad=30, prioridad = prioridad, hora = hora, dia = dia, ciudad = ciudad )
   pedido.save()
 
 
@@ -213,7 +216,9 @@ def pagarEmpleado(request):
 
 def pedidoxEmpleado(request):
   empleados = Empleado.objects.all()
-  contexto = {}
+  contexto = {
+    'empleados':empleados
+  }
 
   for empleado in empleados:
     totalCantidad = Pedido.objects.filter(empleado_asignado = empleado.id).aggregate(Sum('cantidad'))
@@ -268,29 +273,54 @@ def pedidoxHora(request):
 
   return render(request, "plantilla.html", contexto)
 
+def pedidoxHoraxDia(request, Dia):
+  contexto = {}
+  lista =["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"
+      ,"trece","catorce","quince","unoseis","unosiete","unoocho","unonueve","doscero","dosuno","dosdos","dostres"]
+  cont = 0
+  for i in lista:
+    sumHora = Pedido.objects.filter(hora = cont, dia = Dia).aggregate(Sum('cantidad'))
+    cantHora = sumHora["cantidad__sum"]
+    if cantHora == None: cantHora = 0
+    contexto[i] = cantHora
+    cont = cont + 1
+
+  return render(request, "pedidoxHora.html", contexto)
+
 def gananciaxEmp(request):
   empleados = Empleado.objects.all()
 
-  contexto = {}
-  
-  for empleado in empleados:
-    contexto[empleado.nombre] = empleado.pago 
+  contexto = {
+    'empleados' : empleados
+  }
 
   return render(request, "lantilla.html", contexto)
 
 def devolverEmpleados(request):
   empleados = Empleado.objects.all()
-  return render(request, "plantilla.html", empleados)
+  context = {
+    'empleados' : empleados
+  }
+  return render(request, "plantilla.html", context)
 
 def devolverPedidos(request):
   pedidos = Pedido.objects.all()
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "plantilla.html", context)
 
 def devolverPedidosSinAsignar(request):
   pedidos = Pedido.objects.filter(empleado_asignado__isnull=True)
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "plantilla.html", context)
 
 def devolverPedidosAsignados(request):
   pedidos = Pedido.objects.filter(empleado_asignado__isnull=False)
-  return render(request, "plantilla.html", pedidos)
+  context = {
+    'pedidos' : pedidos
+  }
+  return render(request, "plantilla.html", context)
 
