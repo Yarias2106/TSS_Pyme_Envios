@@ -20,7 +20,8 @@
         width: 500px;
         height: 500px;
         margin: auto;
-        background-color: white;
+        background-color: rgb(255, 255, 255, .7);
+        border-radius: 10px;
     }
     .cuadro{
         margin: auto;
@@ -92,28 +93,40 @@
 <script>
     let canvas = document.getElementById("Grafica").getContext("2d")
     var lista = []
+    var listaEmp = []
     {% for empleado in empleados %}
-        var {{empleado.nombre}} = {{empleado.pago}}
-        lista.push({{empleado.nombre}})
+        var pago = {{empleado.pago}}
+        lista.push(pago)
     {% endfor %}
+        
+    {% for empl in listaEmpleados %}
+        var nombre = "{{empl}}"
+        listaEmp.push(nombre)
+    {% endfor %}
+
+    console.log(listaEmp)
     
     var gananciaxEmp = new Chart(canvas,{
         type:"pie",
         data:{
 
             
-            labels:["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"],
+            labels:listaEmp,
             datasets:[
                 {
                     label:"Grafica de dos dias de trabajo",
-                    backgroundColor:["#FF0000",
-                    "#0000FF",
-                    "#800080",
-                    "#00FFFF",
-                    "#FFFF00"
+                    backgroundColor:
+                    ["rgb(255,0,0, .7)",
+                    "rgb(0,0,255, .7)",
+                    "rgb(255,255,0, .7)",
+                    "rgb(0,128,0, .7)",
+                    "rgb(128,0,128, .7)",
+                    "rgb(0,0,128, .7)",
+                    "rgb(0,255,255, .7)",
+                    "rgb(0,255,0, .7)"
                 ],
     
-                    borderColor:"#000000",
+                    borderColor:"rgb(0,0,0, .5)",
                     data: lista
                 }
             ]

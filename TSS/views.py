@@ -310,7 +310,7 @@ def pedidoxHoraxDia(request, Dia):
   
   return render(request, "pedidoxHora.html", contexto)
 
-def pedidoxHoraxDia(request, Dia):
+""" def pedidoxHoraxDia(request, Dia):
   contexto = {}
   lista =["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"
       ,"trece","catorce","quince","unoseis","unosiete","unoocho","unonueve","doscero","dosuno","dosdos","dostres"]
@@ -322,14 +322,20 @@ def pedidoxHoraxDia(request, Dia):
     contexto[i] = cantHora
     cont = cont + 1
 
-  return render(request, "pedidoxHora.html", contexto)
+  return render(request, "pedidoxHora.html", contexto) """
 
 def gananciaxEmp(request):
   empleados = Empleado.objects.all()
+  listaEmpleados = []
+
+  for empleado in empleados:
+    listaEmpleados.append(empleado.nombre)
 
   contexto = {
-    'empleados' : empleados
+    'empleados' : empleados,
+    'listaEmpleados' : listaEmpleados
   }
+  print(listaEmpleados)
 
   return render(request, "gananciaxEmp.html", contexto)
 

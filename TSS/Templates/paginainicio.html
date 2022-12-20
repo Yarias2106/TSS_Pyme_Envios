@@ -21,6 +21,19 @@
         font-size: 18px;
         color: white; 
     }
+    .imagen_relleno {
+        font-size: 25px;
+        font-family: "calibri";
+    }
+    .imagen_relleno img{
+        margin-top: 25px;
+        margin-bottom: 25px;
+        border-radius: 20px;
+    }
+    .abajo label{
+        font-size: 20px;
+        font-weight: bold;
+    }
 </style>
 <body>
     <div class="arriba">
@@ -33,17 +46,17 @@
             <button onclick='location.href="/empleados"'>Lista de Empleados</button>
         </div>
         <div class="imagen_relleno">
-            <h2>Titulo del sitema</h2>
-            <img src="../../static/Imagenes/imagen1.jpg" alt="" height="400px" width="500px">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem ad, sequi sapiente nisi doloribus officiis, mollitia iusto quae pariatur natus saepe expedita. Optio ad dolorum blanditiis repellendus rem ipsam qui.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ea incidunt sunt, dolorum doloribus delectus velit quod nesciunt tempore similique impedit quidem perferendis vero consequuntur odio commodi, sed numquam consequatur ipsum.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur rerum architecto provident tenetur et consequuntur fuga quisquam iste! Dolor ratione vero impedit dolores nisi eius necessitatibus numquam eveniet quia nesciunt.</p>
+            <h2>Sistema de asignación de pedidos</h2>
+            <img src="../../static/Imagenes/imgsistema.jpeg" alt="" height="400px" width="450px">
+            <p>Este sistema esta diseñado para poder ver una simulación de todas las estadisticas sobre pedidos, sueldos y número de pedidos por empleados.</p>
+            <p>Optimizando las entregas a nuestros clientes a traves del algoritmo implementado en nuestro sistema, brindando una minimización de costos y una maximización de las ganancias.</p>
         </div>
     </div>
     <div class="abajo">
         <form action="/inicio/" method="POST" class="formulario">
             {% csrf_token %}
             <h4>Realizar Pedido</h4>
+            <label for="dia">Selecciona el dia</label>
             <select class="select_form" name="dia" id="dia">
                 <option value="LUNES">Lunes</option>
                 <option value="MARTES">Martes</option>
@@ -53,8 +66,11 @@
                 <option value="SABADO">Sabado</option>
                 <option value="DOMINGO">Domingo</option>
             </select>
+            <label for="hora">Ingrese la hora</label>
             <input class="input_form" type="number" name="hora" id="hora" placeholder="Hora">
+            <label for="number">Ingrese la cantidad</label>
             <input class="input_form" type="number" name="cantidad" id="cantidad" placeholder="Cantidad">
+            <label for="ciudades">Seleccione el departamento</label>
             <select class="select_form" name="ciudades" id="ciudades">
                 <option value="Cochabamba">Cochabamba</option>
                 <option value="Santa Cruz">Santa Cruz</option>
