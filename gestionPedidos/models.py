@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Empleado(models.Model):
-    nombre = models.CharField(max_length = 30)
+    nombre = models.TextField(max_length = 30)
     apellido = models.CharField(max_length = 30)
     pago = models.DecimalField(max_digits=5, decimal_places=1, default=0.00)
     trabajando = models.IntegerField(max_length=2, default=0)
