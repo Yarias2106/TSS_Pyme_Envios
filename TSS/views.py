@@ -8,38 +8,44 @@ def home(request):
 
 
 def inicio(request):
-  """ diaActual = "MARTES"
-  horadelDia = 9
 
-  asignacion_pedidos(request, horadelDia, diaActual) """
   asignacion_pedidos(request)
-  #return render(request, "holamundo.html")
+  
+  return redirect("/home/")
 
 
 def asignacion_pedidos(request):
   
-  """ if request.method=="POST":
+  if request.method=="POST":
     
-    Cantidad= request.POST.get('cantidad', '')
-    Hora = request.POST.get('hora', '')
-    Dia = request.POST.get('dia', '')
-    Prioridad = request.POST.get('prioridad', '') 
-    Ciudad = request.POST.get('ciudad', '')"""
-  
-  #Darle un tab------------------
-  Cantidad= 10
-  Hora = 8
-  Dia = "MARTES"
-  Prioridad = 3
-  Ciudad = "Cochabamba"
+    cantidad = request.POST.get('cantidad')
+    Cantidad = int (cantidad)
+    hora = request.POST.get('hora')
+    Hora = int(hora)
+    Dia = request.POST.get('dia')
+    Prioridad = 1
+    Ciudad = request.POST.get('ciudades')
 
-  #Divide los pedidos
-  if Cantidad < 30:
-      pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia, ciudad = Ciudad)
-      pedido.save()
-  else:
-      dividirPedido(Prioridad, Cantidad, Hora, Dia, Ciudad)
-  #Tab hasta aqui----------------------
+    if Ciudad == "La Paz" or Ciudad == "Santa Cruz":
+      Prioridad = 2
+    elif Ciudad == "Cochabamba":
+      Prioridad = 1
+    else:
+      Prioridad = 3
+    #Darle un tab------------------
+    """ Cantidad= 10
+    Hora = 8
+    Dia = "MARTES"
+    Prioridad = 3
+    Ciudad = "Cochabamba" """
+
+    #Divide los pedidos
+    if Cantidad < 30:
+        pedido = Pedido(cantidad=Cantidad, prioridad = Prioridad, hora = Hora, dia = Dia, ciudad = Ciudad)
+        pedido.save()
+    else:
+        dividirPedido(Prioridad, Cantidad, Hora, Dia, Ciudad)
+    #Tab hasta aqui----------------------
 
   #Segun el dia y prioridad se asigna a los empleados
   if Dia == "VIERNES":
@@ -61,6 +67,7 @@ def asignacion_pedidos(request):
     if (Hora >= 8 and Hora < 18 and Hora != 13):
       lista = Pedido.objects.filter(empleado_asignado__isnull=True).order_by('prioridad')
       asignarEmpleado(lista, Hora, Dia)
+    
 
 
 def dividirPedido(prioridad, cantidad, hora, dia, ciudad):
@@ -113,6 +120,7 @@ def asignarEmpleado(lista, Hora, Dia):
           
           pedidoGuardar = Pedido.objects.get(id = pedido.id)
           pedidoGuardar.empleado_asignado_id = empleado.id
+          pedidoGuardar.nombreEmpleado = empleado.nombre
           pedidoGuardar.horaTrabajada = Hora
           pedidoGuardar.diaTrabajado = Dia
           pedidoGuardar.pagoxHora = 12.5
@@ -154,6 +162,7 @@ def asignarEmpleadoFinSemana(lista, Hora,Dia, emp):
 
           pedidoGuardar = Pedido.objects.get(id = pedido.id)
           pedidoGuardar.empleado_asignado_id = empleado.id
+          pedidoGuardar.nombreEmpleado = empleado.nombre
           pedidoGuardar.horaTrabajada = Hora
           pedidoGuardar.diaTrabajado = Dia
           pedidoGuardar.pagoxHora = 50
@@ -191,6 +200,7 @@ def asignarEmpleadoViernes(lista, Hora, Dia):
 
           pedidoGuardar = Pedido.objects.get(id = pedido.id)
           pedidoGuardar.empleado_asignado_id = empleado.id
+          pedidoGuardar.nombreEmpleado = empleado.nombre
           pedidoGuardar.horaTrabajada = Hora
           pedidoGuardar.diaTrabajado = Dia
           pedidoGuardar.pagoxHora = 37.5
@@ -221,15 +231,19 @@ def pagarEmpleado(request):
 
 def pedidoxEmpleado(request):
   empleados = Empleado.objects.all()
-  contexto = {
-    'empleados':empleados
-  }
 
   for empleado in empleados:
     totalCantidad = Pedido.objects.filter(empleado_asignado = empleado.id).aggregate(Sum('cantidad'))
     sumCantidad = totalCantidad["cantidad__sum"]
-    contexto[empleado.nombre] = sumCantidad
+    
+    empleado = Empleado.objects.get(id = empleado.id)
+    empleado.totalPedido = sumCantidad
+    empleado.save()
   
+  empleadosNuevo = Empleado.objects.all()
+  contexto = {
+    'empleados':empleadosNuevo
+  }
   return render(request, "pedidoxEmpleado.html", contexto)
 
 def pedidoxDia(request):
@@ -318,14 +332,6 @@ def gananciaxEmp(request):
   }
 
   return render(request, "gananciaxEmp.html", contexto)
-
-def rescatarDatos(request):
-  cant = request.POST.get('cantidad')
-  hora = request.POST.get('hora')
-  prioridad = request.POST.get('ciudades')
-  dia = request.POST.get('dia')
-
-  return redirect("/home/")
 
 def devolverEmpleados(request):
   empleados = Empleado.objects.all()

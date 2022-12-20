@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from TSS.views import inicio, home, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado, pedidoxDia, pedidoxHora, gananciaxEmp, devolverEmpleados, devolverPedidosSinAsignar, devolverPedidosAsignados,rescatarDatos, pedidoxHoraxDia
+from TSS.views import inicio, home, asignacion_pedidos, pedidoxEmpleado, pagarEmpleado, pedidoxDia, pedidoxHora, gananciaxEmp, devolverEmpleados, devolverPedidosSinAsignar, devolverPedidosAsignados, pedidoxHoraxDia
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,5 @@ urlpatterns = [
     path("empleados/", devolverEmpleados),
     path("pedidosSinAsignar/", devolverPedidosSinAsignar),
     path("pedidosAsignados/", devolverPedidosAsignados),
-    path("rescatar/", rescatarDatos),
     path("pedidoxHoraxDia/<str:Dia>/", pedidoxHoraxDia)
 ]
