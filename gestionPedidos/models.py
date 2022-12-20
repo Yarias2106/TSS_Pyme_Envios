@@ -6,6 +6,7 @@ class Empleado(models.Model):
     apellido = models.CharField(max_length = 30)
     pago = models.DecimalField(max_digits=5, decimal_places=1, default=0.00)
     trabajando = models.IntegerField(max_length=2, default=0)
+    totalPedido = models.IntegerField(max_length=4, default=0)
 
 class Pedido(models.Model):
    cantidad = models.IntegerField(max_length=4, default=0)
@@ -13,6 +14,7 @@ class Pedido(models.Model):
    hora = models.IntegerField(max_length = 2)
    dia = models.CharField(max_length = 30)
    pagoxHora = models.DecimalField(max_digits=5, decimal_places=1, default=0.00)
+   nombreEmpleado = models.CharField(max_length=30, default="-")
    horaTrabajada = models.IntegerField(max_length = 2, default=0)
    diaTrabajado = models.CharField(max_length = 30, default="-")
    ciudad = models.CharField(max_length=30, default="-")

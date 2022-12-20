@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de empleados</title>
+</head>
+<style>
+    .btn_listas button{
+       margin-left: 30px;
+       margin-top: 30px;
+    }
+    .tabla_lista{
+        padding: 120px 120px;
+    }
+    .tabla_lista table{
+        width: 80%;
+        margin: auto;
+        margin-top: 80px;
+    }
+    .pagar{
+        margin-left: 100px;
+        margin-bottom: 50px;
+    }
+    .lista_empleados{
+        background-image: url(../../static/Imagenes/2.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        position: relative;
+        min-height: 100vh; 
+        background-size: cover;     
+    }
+    .encabezado{
+        display: grid;
+        grid-template-columns: 85% 15%;
+    }
+    .encabezado h1{
+        font-size: 40px;
+    }
+</style>
+<body class="lista_empleados">
+    <div class="btn_listas">
+        <button onclick='location.href="/home"'>Atras</button>
+        <button onclick='location.href="/pedidosSinAsignar"'>Pedidos sin Asignar</button>
+        <button onclick='location.href="/pedidosAsignados"'>Pedidos Asignados</button>
+    </div>
+    <div class="tabla_lista">
+        <div class="encabezado">
+            <h1>Lista de Empleados</h1>
+            <button onclick='location.href="/pagarEmpleados"'>Pagar empleados</button>
+        </div>
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Sueldo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for empleado in empleados %}
+                <tr>
+                    <td>{{empleado.nombre}}</td>
+                    <td>{{empleado.apellido}}</td>
+                    <td>{{empleado.pago}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</body>
+</html>

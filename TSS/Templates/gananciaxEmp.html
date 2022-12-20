@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ganancia por Empleado</title>
+</head>
+<style>
+    .cont{
+        display: block;
+        padding: 40px 40px;
+        min-height: 100vh;
+    }
+    .grafica{
+        width: 500px;
+        height: 500px;
+        margin: auto;
+        background-color: white;
+    }
+    .cuadro{
+        margin: auto;
+        width: 70%;
+    }
+    table{
+        table-layout: fixed;
+        width: 100%;
+        margin-top: 80px;
+        border-collapse: collapse;
+        border: 3px solid black;
+        text-align: center;
+        font-size: 20px;
+    }
+    th, td{
+        border: 3px solid black; 
+    }
+    th{
+        background-color: #3F4E4F;
+        color: white;
+    }
+    td{
+        background-color: white;
+    }
+    .titulo{
+        display: grid;
+        grid-template-columns: 10% 90%;
+        text-align: center;
+        margin: 20px 10px;
+    }
+    .ss{
+        background-image: url(../../static/Imagenes/1jpg.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        position: relative;
+        min-height: 100vh; 
+        background-size: cover;     
+    }
+</style>
+<body class="ss">
+    <div class="titulo">
+        <button onclick='location.href="/home"'>Atras</button>
+        <h1>Datos ganancia por Empleado</h1>
+    </div>
+    <div class="cont">
+        <div class="grafica">
+            <canvas id="Grafica"></canvas>
+        </div>
+        <div class="cuadro">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Sueldo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado in empleados %}
+                        <tr>
+                            <td>{{empleado.nombre}}</td>
+                            <td>{{empleado.pago}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    let canvas = document.getElementById("Grafica").getContext("2d")
+    let nombre = ("{{empleados}}")
+    console.log(nombre) 
+
+    var gananciaxEmp = new Chart(canvas,{
+        type:"pie",
+        data:{
+
+            
+            labels:["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"],
+            datasets:[
+                {
+                    label:"Grafica de dos dias de trabajo",
+                    backgroundColor:["#FF0000",
+                    "#0000FF",
+                    "#800080",
+                    "#00FFFF",
+                    "#FFFF00"
+                ],
+    
+                    borderColor:"#000000",
+                    data:[20,30,56,12,34,41,33]
+                }
+            ]
+        }
+    })
+</script>
+</html>

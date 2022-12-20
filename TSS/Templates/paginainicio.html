@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <title>Document</title>
+</head>
+<style>
+    .select_form{
+        width: 100%;
+        background-color: #24303c;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        border: 1px solid #1f53c5;
+        font-family: 'calibri';
+        font-size: 18px;
+        color: white; 
+    }
+</style>
+<body>
+    <div class="arriba">
+        <div class="btn_graf">
+            <button onclick='location.href="/gananciaxEmp"'>Ganancia por Empleado</button><br>
+            <button onclick='location.href="/pedxEmp"'>Pedidos por Empleado</button><br>
+            <button onclick='location.href="/pedxHora"'>Pedidos por Hora</button><br>
+            <button onclick='location.href="/pedxDia"'>Pedidos por Dia</button>
+            <br><br>
+            <button onclick='location.href="/empleados"'>Lista de Empleados</button>
+        </div>
+        <div class="imagen_relleno">
+            <h2>Titulo del sitema</h2>
+            <img src="../../static/Imagenes/imagen1.jpg" alt="" height="400px" width="500px">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem ad, sequi sapiente nisi doloribus officiis, mollitia iusto quae pariatur natus saepe expedita. Optio ad dolorum blanditiis repellendus rem ipsam qui.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ea incidunt sunt, dolorum doloribus delectus velit quod nesciunt tempore similique impedit quidem perferendis vero consequuntur odio commodi, sed numquam consequatur ipsum.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur rerum architecto provident tenetur et consequuntur fuga quisquam iste! Dolor ratione vero impedit dolores nisi eius necessitatibus numquam eveniet quia nesciunt.</p>
+        </div>
+    </div>
+    <div class="abajo">
+        <form action="/inicio/" method="POST" class="formulario">
+            {% csrf_token %}
+            <h4>Realizar Pedido</h4>
+            <select class="select_form" name="dia" id="dia">
+                <option value="LUNES">Lunes</option>
+                <option value="MARTES">Martes</option>
+                <option value="MIERCOLES">Miercoles</option>
+                <option value="JUEVES">Jueves</option>
+                <option value="VIERNES">Viernes</option>
+                <option value="SABADO">Sabado</option>
+                <option value="DOMINGO">Domingo</option>
+            </select>
+            <input class="input_form" type="number" name="hora" id="hora" placeholder="Hora">
+            <input class="input_form" type="number" name="cantidad" id="cantidad" placeholder="Cantidad">
+            <select class="select_form" name="ciudades" id="ciudades">
+                <option value="Cochabamba">Cochabamba</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+                <option value="La Paz">La Paz</option>
+                <option value="Tarija">Tarija</option>
+                <option value="Chuquisaca">Chuquisaca</option>
+                <option value="Pando">Pando</option>
+                <option value="Beni">Beni</option>
+                <option value="Oruro">Oruro</option>
+                <option value="Potosi">Potosi</option>
+            </select>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>

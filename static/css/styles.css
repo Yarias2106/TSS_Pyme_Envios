@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.arriba{
+    display: grid;
+    grid-template-columns: 33% 67%;
+    min-height: 100vh;
+    background-color: #2C3639;
+}
+.abajo{
+    min-height: 100vh;
+    background-color: #DCD7C9;
+    padding: 100px 50px;
+
+}
+.btn_graf{
+    text-align: center;
+    padding-top: 15%;
+    padding-bottom: 10%;
+}
+.btn_graf button{
+    width: 380px;
+    height: 80px;
+    margin-top: 25px;
+    border-radius: 15px;
+    font-size: 20px;
+}
+.btn_graf button:hover{
+    background-color: #3F4E4F;
+}
+.imagen_relleno{
+    text-align: center;
+    padding: 30px 30px;
+    font-size: 20px;
+    color: white;
+}
+.imagen_relleno img{
+    margin-top: 20px;
+}
+.formulario{
+    text-align: center;
+    width: 400px;
+    background: rgba(255, 255, 255, 0.635);
+    padding: 30px;
+    margin: auto;
+    border-radius: 8px;
+    font-family: 'calibri';
+    color: black;
+    box-shadow: 7px 13px 37px #000;
+}
+.formulario h4{
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.input_form{
+    width: 100%;
+    background-color: #24303c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #1f53c5;
+    font-family: 'calibri';
+    font-size: 18px;
+    color: white; 
+}
+.formulario button{
+    width: 80%;
+    background-color: #3F4E4F;
+    border: none;
+    padding: 12px;
+    color: white;
+    margin: 16px 0;
+    font-size: 16px;
+    border-radius: 15px;
+}
+.formulario button:hover{
+    background-color: #0e2135;
+}
+
+.cont{
+    display: block;
+}
+
+button {
+    padding: 15px 25px;
+    border: unset;
+    border-radius: 15px;
+    color: #212121;
+    z-index: 1;
+    background: #e8e8e8;
+    position: relative;
+    font-weight: 1000;
+    font-size: 17px;
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    transition: all 250ms;
+    overflow: hidden;
+   }
+   
+   button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    border-radius: 15px;
+    background-color: #212121;
+    z-index: -1;
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    transition: all 250ms
+   }
+   
+   button:hover {
+    color: #e8e8e8;
+   }
+   
+   button:hover::before {
+    width: 100%;
+   }
+
+#dias{
+    width: 100%;
+    background-color: #24303c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #1f53c5;
+    font-family: 'calibri';
+    font-size: 18px;
+    color: white; 
+}
+.cont{
+    display: block;
+    padding: 40px 40px;
+    min-height: 100vh;
+}
+.grafica{
+    width: 900px;
+    height: 500px;
+    margin: auto;
+    background-color: white;
+}
+.cuadro{
+    margin: auto;
+}
+table{
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    border: 3px solid black;
+    text-align: center;
+    margin-top: 80px;
+    font-size: 18px;
+}
+th, td{
+    border: 3px solid black; 
+    height: 50px;
+}
+th{
+    background-color: #3F4E4F;
+    color: white;
+}
+td{
+    background-color: white;
+}
+.titulo{
+    display: grid;
+    grid-template-columns: 10% 90%;
+    text-align: center;
+    margin: 20px 10px;
+}
+.ss{
+    background-color: #DCD7C9;
+}
