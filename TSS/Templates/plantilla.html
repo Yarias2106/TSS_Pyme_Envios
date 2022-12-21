@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilla</title>
+</head>
+<style>
+.tabla_plantilla{
+    text-align: center;
+    margin-bottom: 40px;
+}    
+.tabla_plantilla table{
+    width: 75%;
+    margin: auto;
+}
+.titulo_plan{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
+.titulo_plan button{
+    width: 120px;
+}
+.da{
+    background-image: url(../../static/Imagenes/1jpg.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh; 
+    background-size: cover;  
+}
+</style>
+<body class="da">
+    <div>
+        <div class="titulo_plan">
+            <button onclick='location.href="/home"'>Atras</button>
+            <h1>Reporte de sueldos a pagar</h1>
+        </div>
+        <div class="tabla_plantilla">
+            <table>
+                <thead>
+                    <th rowspan="2">Nombre de Empleado</th>
+                    <th rowspan="2">Total dias trabajados</th>
+                    <th rowspan="2">Horas trabajadas</th>
+                    <th colspan="3">Salario</th>
+                    <th rowspan="2">Cantidad de pedidos realizados</th>
+                    <th rowspan="2">Total a pagar</th>
+                    <tr>    
+                        <th>Jornada normal</th>
+                        <th>Horas Extra</th>
+                        <th>Fines de semana</th>
+                    </tr>
+
+                </thead>
+                
+                <tbody>
+                        {% for empleado in empleados %}
+                        <tr>
+                            <td>{{empleado.nombre}}</td>
+                            <td>{{empleado.diasTrabajados}}</td>
+                            <td>{{empleado.horasTrabajadas}} Hrs</td>
+                            <td>{{empleado.salJorNorm}} Bs</td>
+                            <td>{{empleado.salHorasExtra}} Bs</td>
+                            <td>{{empleado.salFinSemana}} Bs</td>
+                            <td>{{empleado.pedidosTrabajados}}</td>
+                            <td>{{empleado.pago}} Bs</td>
+                        </tr>   
+                        {% endfor %} 
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -215,17 +215,12 @@ def asignarEmpleadoViernes(lista, Hora, Dia):
 def pagarEmpleado(request):
   
   empleados = Empleado.objects.all()
-  semana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO']
 
   for empleado in empleados:
-    for hoy in semana:
-      for i in range(8, 22):
-        pedido = Pedido.objects.filter(empleado_asignado = empleado.id).filter(diaTrabajado = hoy).filter(horaTrabajada = i )
-        
-        if pedido.count() >= 1:
-          empleado = Empleado.objects.get(id = empleado.id)
-          empleado.pago = empleado.pago + pedido.first().pagoxHora
-          empleado.save()
+    
+    empleado = Empleado.objects.get(id = empleado.id)
+    empleado.pago = empleado.salJorNorm + empleado.salHorasExtra + empleado.salFinSemana
+    empleado.save()
   
   return redirect("/empleados/")
 
@@ -235,10 +230,10 @@ def pedidoxEmpleado(request):
   for empleado in empleados:
     totalCantidad = Pedido.objects.filter(empleado_asignado = empleado.id).aggregate(Sum('cantidad'))
     sumCantidad = totalCantidad["cantidad__sum"]
-    
-    empleado = Empleado.objects.get(id = empleado.id)
-    empleado.totalPedido = sumCantidad
-    empleado.save()
+    if sumCantidad != None:
+      empleado = Empleado.objects.get(id = empleado.id)
+      empleado.totalPedido = sumCantidad
+      empleado.save()
   
   empleadosNuevo = Empleado.objects.all()
   contexto = {
@@ -367,3 +362,56 @@ def devolverPedidosAsignados(request):
   }
   return render(request, "pedidosasignados.html", context)
 
+def empleadoReporte(request):
+  empleados = Empleado.objects.all()
+  semana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO']
+
+  
+
+  for empleado in empleados:
+    empleadoGuardar = Empleado.objects.get(id = empleado.id)
+          
+    cantPedidosQuery = Pedido.objects.filter(empleado_asignado = empleado.id).aggregate(Sum('cantidad'))
+    cantPedidos = cantPedidosQuery["cantidad__sum"]
+    
+    if cantPedidos == None: cantPedidos = 0
+    
+    cantHoras = 0
+    cantDias = 0
+    cantSalNorm = 0
+    cantSalFin = 0
+    cantSalExtra = 0
+
+    for hoy in semana:
+      bandera = False
+      for i in range(8, 22):
+        pedido = Pedido.objects.filter(empleado_asignado = empleado.id).filter(diaTrabajado = hoy).filter(horaTrabajada = i )
+        
+        if pedido.count() >= 1:
+          cantHoras = cantHoras + 1
+          bandera = True
+          if i >= 18 and i <= 21 and hoy == "VIERNES":
+            cantSalExtra = cantSalExtra + 37.5
+
+          if hoy == "LUNES" or hoy == "MARTES" or hoy == "MIERCOLES" or hoy == "JUEVES" or hoy == "VIERNES":
+            cantSalNorm = cantSalNorm + 12.5
+
+          if hoy == "SABADO" or hoy == "DOMINGO":
+            cantSalFin = cantSalFin + 50
+        
+      if bandera:
+        cantDias = cantDias + 1
+    
+    empleadoGuardar.diasTrabajados = cantDias
+    empleadoGuardar.horasTrabajadas = cantHoras
+    empleadoGuardar.salJorNorm = cantSalNorm
+    empleadoGuardar.salHorasExtra = cantSalExtra
+    empleadoGuardar.salFinSemana =cantSalFin
+    empleadoGuardar.pedidosTrabajados = cantPedidos
+    empleadoGuardar.save()
+
+  context = {
+    'empleados' : empleados
+  }
+
+  return render(request, "plantilla.html", context)
