@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <script src="https://kit.fontawesome.com/b6788bfebb.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planilla</title>
 </head>
@@ -21,8 +22,9 @@
     margin-top: 20px;
     margin-left: 20px;
     margin-bottom: 30px;
+    margin-right: 30px;
     display: grid;
-    grid-template-columns: 15% 85%;
+    grid-template-columns: 13% 80% 7%;
 }
 .titulo_plan button{
     width: 120px;
@@ -35,12 +37,16 @@
     min-height: 100vh; 
     background-size: cover;  
 }
+.icon {
+    margin-left: 20px;
+}
 </style>
 <body class="da">
     <div>
         <div class="titulo_plan">
             <button onclick='location.href="/home"'>Atras</button>
             <h1>Reporte de sueldos a pagar</h1>
+            <button class="incon"><i class="fa-solid fa-print"></i></button>
         </div>
         <div class="tabla_plantilla">
             <table>
