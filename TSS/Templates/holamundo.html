@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <title>Pagina inicio</title>
+</head>         
+<body>
+    <section class="formulario">
+        <h4>Formulario</h4>
+        <input class="input_form" type="text" name="" id="" placeholder="dato1">
+        <input class="input_form" type="text" name="" id="" placeholder="dato2">
+        <input class="input_form" type="text" name="" id="" placeholder="dato3">
+        <input class="input_form" type="text" name="" id="" placeholder="dato4">
+        <input class="input_form" type="text" name="" id="" placeholder="dato5">
+        <button>Enviar</button>
+    </section>
+    <section class="cuadroGrafica">
+        <div class="cuadro" style="width: 800px; height:300px;">
+            <canvas id="Grafica"></canvas>
+        </div>
+    </section>
+</body>
+<script>
+    let canvas = document.getElementById("Grafica").getContext("2d")
+    
+    var chart = new Chart(canvas,{
+        type:"line",
+        data:{
+            labels:["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"],
+            datasets:[
+                {
+                    label:"Grafica de dos dias de trabajo",
+                    backgroundColor:["#FF0000",
+                    "#0000FF",
+                    "#800080",
+                    "#00FFFF",
+                    "#FFFF00"
+                ],
+                    
+                    borderColor:"#000000",
+                    data:[{{lunes}},{{martes}},{{miercoles}},{{jueves}},{{viernes}},{{sabado}},{{domingo}}]
+                }
+            ]
+        }
+    })
+</script>
+</html>
